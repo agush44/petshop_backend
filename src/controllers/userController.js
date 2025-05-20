@@ -52,6 +52,7 @@ const loginUserController = async (req, res, next) => {
       });
     }
 
+    // Compara el password proporcionado con el hash almacenado
     const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
@@ -61,8 +62,9 @@ const loginUserController = async (req, res, next) => {
       });
     }
 
+    // Genera un token JWT
     const token = jwt.sign({ email: user.email }, JWT_SECRET, {
-      expiresIn: "5h",
+      expiresIn: "1h",
     });
 
     res.status(200).json({

@@ -1,3 +1,5 @@
+// Middleware de validación para rutas Express con schema de Joi
+
 const validate = (schema) => (req, res, next) => {
   const { error } = schema.validate(req.body);
   if (error) {
