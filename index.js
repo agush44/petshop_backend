@@ -72,13 +72,12 @@ app.use(helmet());
 // Parseo de JSON con optimización
 app.use(express.json());
 
-// Conectar a la base de datos
 connectDB();
 
 // Configuración de caché para rutas específicas
 app.use("/api/products", (req, res, next) => {
   if (req.method === "GET") {
-    res.set("Cache-Control", "public, max-age=3600"); // 1 hora
+    res.set("Cache-Control", "public, max-age=60, must-revalidate");
   } else {
     res.set("Cache-Control", "no-store");
   }

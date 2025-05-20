@@ -3,7 +3,7 @@ import Product from "../models/product.js";
 const getProducts = async (req, res) => {
   try {
     const products = await Product.find();
-    res.json(products);
+    res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: "Error fetching products" });
   }
@@ -16,8 +16,7 @@ const getPromotionProducts = async (req, res) => {
       discount: { $gt: 0 },
       discountExpiresAt: { $gte: currentDate },
     });
-
-    res.json(products);
+    res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: "Error fetching promotion products" });
   }
@@ -26,10 +25,10 @@ const getPromotionProducts = async (req, res) => {
 const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (product) {
-      res.json(product);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
     } else {
-      res.status(404).json({ message: "Product not found" });
+      res.status(200).json(product);
     }
   } catch (error) {
     res.status(500).json({ message: "Error fetching product" });
@@ -51,10 +50,10 @@ const updateProduct = async (req, res) => {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-
-    if (product) {
-      res.json(product);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
     }
+    res.status(200).json(product);
   } catch (error) {
     res.status(500).json({ message: "Error updating product" });
   }
@@ -63,10 +62,10 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
-    if (product) {
-      res.json({ message: "Product deleted" });
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
     } else {
-      res.status(404).json({ message: "Product not found" });
+      res.status(200).json({ message: "Product deleted" });
     }
   } catch (error) {
     res.status(500).json({ message: "Error deleting product" });
