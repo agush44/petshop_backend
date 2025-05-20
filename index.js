@@ -69,34 +69,15 @@ app.use(
 // Middleware de seguridad
 app.use(helmet());
 
-// Parseo de JSON con optimización
 app.use(express.json());
 
 connectDB();
 
-// Configuración de caché para rutas específicas
-app.use("/api/products", (req, res, next) => {
-  if (req.method === "GET") {
-    res.set("Cache-Control", "public, max-age=60, must-revalidate");
-  } else {
-    res.set("Cache-Control", "no-store");
-  }
-  next();
-});
-
-// Endpoint de "keep-alive" para Render
-app.get("/api/ping", (req, res) => {
-  res.status(200).send("API activa y funcionando ✅");
-});
-
-// Rutas de la API
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 
-// Middleware de manejo de errores
 app.use(errorMiddleware);
 
-// Iniciar el servidor
 app.listen(PORT, () => {
   console.log("Servidor en escucha por el puerto http://localhost:" + PORT);
 });
